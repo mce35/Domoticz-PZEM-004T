@@ -2,20 +2,13 @@
 
 import serial
 from pymodbus.client.sync import ModbusSerialClient
+from pymodbus.client.sync import ModbusTcpClient
+from pymodbus.framer.rtu_framer import ModbusRtuFramer
 
 class PZEM004T:
-    def __init__(self,usb_port):
-        self.port_name = usb_port
-        self.modbus_client = client = ModbusSerialClient(
-            method='rtu',
-            port=self.port_name,
-            baudrate=9600,
-            timeout=3,
-            parity='N',
-            stopbits=1,
-            bytesize=8,
-            retries=5
-        )
+    def __init__(self):
+        self.port_name = ""
+        self.modbus_client = None
 
     def reconnect(self):
         tries = 0
@@ -58,3 +51,24 @@ class PZEM004T:
         alarm = data[9] # 0 = no alarm
 
         return (voltage, current, power, energy, frequency, powerFactor, alarm)
+
+class PZEM004TSerial(PZEM004T):
+    def __init__(self, usb_port):
+        PZEM004T.__init__(self)
+        self.port_name = usb_port
+        self.modbus_client = ModbusSerialClient(
+            method='rtu',
+            port=self.port_name,
+            baudrate=9600,
+            timeout=3,
+            parity='N',
+            stopbits=1,
+            bytesize=8,
+            retries=5
+        )
+
+class PZEM004TTCP(PZEM004T):
+    def __init__(self, host, port):
+        PZEM004T.__init__(self)
+        self.port_name = host + ":" + str(port)
+        self.modbus_client = ModbusTcpClient(host, port, ModbusRtuFramer)

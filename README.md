@@ -15,16 +15,12 @@ Creates the following Domoticz Devices:
 | Field | Information|
 | ----- | ---------- |
 | Serial Port | The port where the meter is connected |
+| Address | IP address when using Modbus over TCP |
+| Port | TCP port for Modbus over TCP |
 
 ## TODO
 
 * Add power factor, current, frequency and alarm monitoring
 * Ability to configure alarm threshold
 * Ability to monitor multiple meters connected to the same serial port
-* Ability to read dat afrom a meter connected through a TCP/IP serial bridge
-
-
-
-
-
-
+* Add more logs
