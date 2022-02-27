@@ -32,6 +32,8 @@ class BasePlugin:
     enabled = False
     __UNIT_P1_SMART_METER = 1
     __UNIT_VOLTAGE = 2
+    __UNIT_POWERFACTOR = 3
+    __UNIT_FREQ = 4
 
     def __init__(self):
         Domoticz.Log("Start PZEM plugin")
@@ -49,6 +51,10 @@ class BasePlugin:
             Domoticz.Device(Name="PZEM-004T meter", Type=250, Subtype=1, Unit=self.__UNIT_P1_SMART_METER).Create()
         if not self.__UNIT_VOLTAGE in Devices:
             Domoticz.Device(Name="PZEM-004T voltage", TypeName="General", Subtype=8, Unit=self.__UNIT_VOLTAGE).Create()
+        if not self.__UNIT_POWERFACTOR in Devices:
+            Domoticz.Device(Name="PZEM-004T power factor", TypeName="General", Subtype=31, Unit=self.__UNIT_POWERFACTOR).Create()
+        if not self.__UNIT_FREQ in Devices:
+            Domoticz.Device(Name="PZEM-004T frequency", TypeName="General", Subtype=31, Unit=self.__UNIT_FREQ).Create()
 
         # Set plugin heartbeat to 10s
         Domoticz.Heartbeat(10)
@@ -68,6 +74,12 @@ class BasePlugin:
         if self.__UNIT_VOLTAGE in Devices:
             sValue = str(voltage)
             Devices[self.__UNIT_VOLTAGE].Update(nValue = 0, sValue = sValue)
+        if self.__UNIT_POWERFACTOR in Devices:
+            sValue = str(powerFactor)
+            Devices[self.__UNIT_POWERFACTOR].Update(nValue = 0, sValue = sValue)
+        if self.__UNIT_FREQ in Devices:
+            sValue = str(frequency)
+            Devices[self.__UNIT_FREQ].Update(nValue = 0, sValue = sValue)
 
 global _plugin
 _plugin = BasePlugin()
