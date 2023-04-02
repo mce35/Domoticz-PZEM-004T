@@ -40,10 +40,11 @@ class BasePlugin:
         self.pzem = None
 
     def onStart(self):
-        Domoticz.Log("PZEM plugin started!")
         if Parameters["Address"] == "0.0.0.0" or Parameters["Address"] == "":
+            Domoticz.Log("PZEM plugin started, serial port=" + Parameters["SerialPort"])
             self.pzem = pzem.PZEM004TSerial(Parameters["SerialPort"])
         else:
+            Domoticz.Log("PZEM plugin started, remote=" + Parameters["Address"] + ":" + Parameters["Port"])
             self.pzem = pzem.PZEM004TTCP(Parameters["Address"], int(Parameters["Port"]))
         self.pzem.reconnect()
 

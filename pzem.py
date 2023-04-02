@@ -1,8 +1,8 @@
 # Library for Peacefair PZEM-004T Energy monitor
 
 import serial
-from pymodbus.client.sync import ModbusSerialClient
-from pymodbus.client.sync import ModbusTcpClient
+from pymodbus.client import ModbusSerialClient
+from pymodbus.client import ModbusTcpClient
 from pymodbus.framer.rtu_framer import ModbusRtuFramer
 
 class PZEM004T:
@@ -33,11 +33,12 @@ class PZEM004T:
         while tries < 5:
             try:
                 # Read all registers (10) from PZEM (reading any other number of registers does not work)
-                req = self.modbus_client.read_input_registers(0, 10, unit=1)#, 0xF8)
+                req = self.modbus_client.read_input_registers(0, 10, slave=1)#, 0xF8)
                 data = req.registers;
                 break
-            except:
+            except Exception as e:
                 tries += 1
+                print(e)
             self.reconnect()
             print("read failed on " + self.port_name + ", trying again " + str(tries))
         if data == False:
