@@ -24,3 +24,5 @@ Creates the following Domoticz Devices:
 * Ability to configure alarm threshold
 * Ability to monitor multiple meters connected to the same serial port
 * Add more logs
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate/?business=VNKNGYUAZQR6A&no_recurring=0&currency_code=EUR)
