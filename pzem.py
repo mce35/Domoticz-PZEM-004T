@@ -3,7 +3,7 @@
 import serial
 from pymodbus.client import ModbusSerialClient
 from pymodbus.client import ModbusTcpClient
-from pymodbus.framer.rtu_framer import ModbusRtuFramer
+from pymodbus.framer import FramerType
 
 class PZEM004T:
     def __init__(self, slaves):
@@ -37,7 +37,7 @@ class PZEM004T:
             while tries < 5:
                 try:
                     # Read all registers (10) from PZEM (reading any other number of registers does not work)
-                    req = self.modbus_client.read_input_registers(0, 10, slave=current_slave)#, 0xF8)
+                    req = self.modbus_client.read_input_registers(0, count = 10, slave = current_slave)#, 0xF8)
                     data = req.registers
                     err = ""
                     break
@@ -66,7 +66,7 @@ class PZEM004TSerial(PZEM004T):
         PZEM004T.__init__(self, slaves)
         self.port_name = usb_port
         self.modbus_client = ModbusSerialClient(
-            method='rtu',
+            framer = FramerType.RTU,
             port=self.port_name,
             baudrate=9600,
             timeout=3,
@@ -75,9 +75,10 @@ class PZEM004TSerial(PZEM004T):
             bytesize=8,
             retries=5
         )
+        self.modbus_client.connect()
 
 class PZEM004TTCP(PZEM004T):
     def __init__(self, host, port, slaves):
         PZEM004T.__init__(self, slaves)
         self.port_name = host + ":" + str(port)
-        self.modbus_client = ModbusTcpClient(host, port, ModbusRtuFramer)
+        self.modbus_client = ModbusTcpClient(host, port, framer = FramerType.RTU)
